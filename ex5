@@ -1,0 +1,80 @@
+#include<stdio.h>
+main()
+{
+int a[50][50]; 
+int max[50][50];
+int min[50][50];
+int n, m, i, j,t, aide,c;
+printf("nombre de lignes (max.50) : ");
+scanf("%d", &n );
+printf("nombre de colonnes (max.50) : ");
+scanf("%d", &m );
+for (i=0; i<n; i++)
+for (j=0; j<m; j++)
+{
+printf("Elément[%d][%d] : ",i,j);
+scanf("%d", &a[i][j]);
+}
+
+printf("matrice donnée :\n");
+for (i=0; i<n; i++)
+{
+for (j=0; j<m; j++)
+printf("%7d", a[i][j]);
+printf("\n");
+}
+
+for (i=0; i<n; i++)
+{
+
+aide=a[i][0];
+for (j=1; j<m; j++)
+if (a[i][j]>aide)
+{
+  aide=a[i][j];
+}
+for (j=0; j<m; j++)
+if (a[i][j]==aide)
+{
+max[i][j]=1; 
+}
+else{
+max[i][j]=0;	
+}
+
+}
+for (j=0; j<m; j++)
+{
+
+aide=a[0][j];
+for (i=1; i<n; i++)
+if (a[i][j]<aide)
+{
+aide=a[i][j];
+} 
+for (i=0; i<n; i++)
+if (a[i][j]==aide)
+{
+min[i][j]=1;
+}
+else{
+min[i][j]=0;	
+}
+
+}
+
+printf("Points - cols :\n");
+for (c=0, i=0; i<n; i++)
+for (j=0; j<m; j++)
+if (max[i][j]&&min[i][j])
+{
+c++;
+printf("L'élément %d\test un maximum "
+"sur la ligne %d\n"
+" \t et un minimum "
+"sur la colonne %d\n", a[i][j], i, j);
+}
+if (c==0)
+printf("Le tableau ne contient pas de points-cols.\n");
+return 0;
+}
