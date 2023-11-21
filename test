@@ -1,20 +1,12 @@
 #include <stdio.h>
-
-#define MAX_ROWS 100
-#define MAX_COLS 100
-
 int main() {
     int N, M;
-
-    // Saisie des dimensions de la matrice
     printf("Entrez le nombre de lignes de la matrice : ");
     scanf("%d", &N);
     printf("Entrez le nombre de colonnes de la matrice : ");
     scanf("%d", &M);
-
-    int matrice[MAX_ROWS][MAX_COLS];
+    int matrice[100][100];
     int *ptrMatrice = &matrice[0][0];
-
     printf("Saisie de la matrice :\n");
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < M; ++j) {
@@ -22,14 +14,25 @@ int main() {
             scanf("%d", ptrMatrice + i * M + j);
         }
     }
+
     printf("\nMatrice :\n");
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < M; ++j) {
             printf("%d\t", *(ptrMatrice + i * M + j));
         }
-        
         printf("\n");
     }
 
+    printf("\nTransposée de la matrice :\n");
+    for (int j = 0; j < M; ++j) {
+        for (int i = 0; i < N; ++i) {
+            printf("%d\t", *(ptrMatrice + i * M + j));
+        }
+        printf("\n");
+    }
+ printf("\nMatrice interprétée comme un tableau unidimensionnel :\n");
+    for (int i = 0; i < N * M; ++i) {
+        printf("%d\t", *(ptrMatrice + i));
+    }
     return 0;
 }
