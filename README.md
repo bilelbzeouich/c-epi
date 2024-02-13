@@ -1,11 +1,152 @@
-"# c-epi" 
-https://www.mediafire.com/file/qc19jbkp3xarvzf/epi_c.rar/file
+#include <stdio.h>
+#include <stdlib.h>
 
-https://cdn.fbsbx.com/v/t59.2708-21/309375452_798511318084246_2540962113456987808_n.pdf/Chap1-SystemeNum.pdf?_nc_cat=101&ccb=1-7&_nc_sid=2b0e22&_nc_ohc=rynlSMlU0ggAX8WTUw8&_nc_ht=cdn.fbsbx.com&oh=03_AdSYIN3jh9tIUe4nrtf9QUv0WgbZFBuN37FPnZKP14vdtQ&oe=653BDF74&dl=1
+struct cellule {
+    int info;
+    cellule *suiv; // Pointeur sur la cellule suivante dans la liste chaînée
+};
 
-https://www.mediafire.com/folder/p0eebdimaahcf/reseaux
+typedef cellule *liste; // renommer le type cellule * par liste
 
+liste allo_cell() {
+    liste nouv;
+    nouv = (liste)malloc(sizeof(struct cellule));
+    if (!nouv)
+        printf("Allocation impossible");
+    else
+        return nouv;
+}
 
+liste copie(liste L) {
+    liste p = L; // Pointeur de parcours de la liste chaînée L.
+    liste Lres = NULL; // Pointeur sur le premier élément de la nouvelle liste en cours de création
+    liste nouv;
+    liste pfin = NULL; // Pointeur sur le dernier élément de la nouvelle liste en cours de création
 
+    while (p != NULL) {
+        nouv = allo_cell(); // Allocation dynamique d’une structure element.
+        nouv->info = p->info;
+        nouv->suiv = NULL;
 
-https://www.mediafire.com/file/dqygefavvv1qjwe/tp1.rar/file
+        if (Lres == NULL) { // La deuxième liste est encore vide
+            Lres = nouv;
+            pfin = nouv;
+        } else {
+            pfin->suiv = nouv;
+            pfin = pfin->suiv;
+        }
+        p = p->suiv;
+    }
+    return Lres;
+}
+
+void affiche(liste L) {
+    if (L == NULL) {
+        printf("La liste est vide\n");
+        return;
+    }
+    while (L != NULL) {
+        printf("%d\t", L->info);
+        L = L->suiv;
+    }
+    printf("\n");
+}
+
+liste inserer_tete(liste L, int val) {
+    liste nouv = allo_cell();
+    nouv->info = val;
+    nouv->suiv = L;
+    l=nouv;
+    return nouv;
+}
+
+liste inserer_fin(liste queue, int val) {
+    liste nouv = allo_cell();
+    nouv->info = val;
+    nouv->suiv = NULL;
+    queue->suiv = nouv;
+    return nouv;
+}
+
+void inserer_milieu(liste adr, int val) {
+    liste nouv = allo_cell();
+    nouv->info = val;
+    nouv->suiv = adr->suiv;
+    adr->suiv = nouv;
+}
+
+liste recherche_pos(liste L, int val) {
+    liste p = L; // Pointeur de parcours de la liste chaînée L.
+    liste prec = NULL; // Résultat de la fonction.
+
+    while (p != NULL && p->info < val) {
+        prec = p;
+        p = p->suiv;
+    }
+    return prec;
+}
+
+liste fusion(liste L1, liste L2) {
+    liste L3 = NULL; // La liste chaînée finale après la fusion
+    liste p2 = L2; // Pointeur de parcours de la liste chaînée L2
+    liste prec;
+
+    if (L1 == NULL)
+        return L2;
+    else if (L2 == NULL)
+        return L1;
+    else {
+        L3 = copie(L1);
+
+        while (p2 != NULL) {
+            prec = recherche_pos(L3, p2->info);
+
+            if (prec == NULL) {
+                // Insertion en tête de liste
+                L3 = inserer_tete(L3, p2->info);
+            } else if (prec->suiv == NULL) {
+                // Insertion en fin de liste
+                L3 = inserer_fin(prec, p2->info);
+            } else {
+                // Insertion au milieu de liste
+                inserer_milieu(prec, p2->info);
+            }
+            p2 = p2->suiv;
+        }
+        return L3;
+    }
+}
+
+// Fonction remplir() pour créer et remplir une liste
+liste remplir() {
+    int n, val;
+    liste L = NULL;
+    printf("Combien d'éléments voulez-vous ajouter ? ");
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        printf("Entrez l'élément %d : ", i + 1);
+        scanf("%d", &val);
+        if (L == NULL)
+            L = allo_cell();
+        else
+            L = inserer_fin(L, val);
+    }
+    return L;
+}
+
+int main() {
+    liste L1, L2, L3;
+    printf("Remplissage de la première liste\n");
+    L1 = remplir();
+    printf("Remplissage de la deuxième liste\n");
+    L2 = remplir();
+    printf("Affichage de la première liste\n");
+    affiche(L1);
+    printf("Affichage de la deuxième liste\n");
+    affiche(L2);
+    L3 = fusion(L1, L2);
+    printf("Affichage de la liste finale\n");
+    affiche(L3);
+    return 0;
+}
+
